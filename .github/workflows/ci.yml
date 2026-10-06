@@ -1,0 +1,32 @@
+# 이 파일의 역할: push할 때마다 GitHub 서버에서 pytest를 자동 실행한다.
+# 서버에 접속하지 않는다. 모두 GitHub 안에서 끝낸다. 
+name: CI
+
+# 언제 실행할까? main 브랜치에 push할 때, Pull Request를 만들 때
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+  # GitHub가 빌려주는 임시 우분투 서버(끝나면 사라진다.)
+  runs-on: ubuntu-latest
+  steps:
+    # 1) 저장소의 코드를 이 임시 서버로 내려받는다.
+    - uses: actions/checkout@v4
+
+    # 2) 파이썬 설치 (내 작업 pc와 같은 3.10)
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+    
+    # 3) uv 설치 후 uv.lock 그대로 의존성 설치
+    - name: uv 설치 및 의존성 설치
+      run: |
+        pip install uv
+        uv sync
+
+    # 4) 테스트 실행 
+    - name: 테스트 실행
+      run: uv run python -m pytest tests -v
