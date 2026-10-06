@@ -10,23 +10,23 @@ on:
 
 jobs:
   test:
-  # GitHub가 빌려주는 임시 우분투 서버(끝나면 사라진다.)
-  runs-on: ubuntu-latest
-  steps:
-    # 1) 저장소의 코드를 이 임시 서버로 내려받는다.
-    - uses: actions/checkout@v4
+    # GitHub가 빌려주는 임시 우분투 서버(끝나면 사라진다.)
+    runs-on: ubuntu-latest
+    steps:
+      # 1) 저장소의 코드를 이 임시 서버로 내려받는다.
+      - uses: actions/checkout@v4
 
-    # 2) 파이썬 설치 (내 작업 pc와 같은 3.10)
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-    
-    # 3) uv 설치 후 uv.lock 그대로 의존성 설치
-    - name: uv 설치 및 의존성 설치
-      run: |
-        pip install uv
-        uv sync
+      # 2) 파이썬 설치 (내 작업 pc와 같은 3.10)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      # 3) uv 설치 후 uv.lock 그대로 의존성 설치
+      - name: uv 설치 및 의존성 설치
+        run: |
+          pip install uv
+          uv sync
 
-    # 4) 테스트 실행 
-    - name: 테스트 실행
-      run: uv run python -m pytest tests -v
+      # 4) 테스트 실행 
+      - name: 테스트 실행
+        run: uv run python -m pytest tests -v
