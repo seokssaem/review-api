@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 8005
 
 # app/main.py의 FastAPI 객체를 Uvicorn으로 실행한다.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8005", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8005"]
