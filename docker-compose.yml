@@ -1,0 +1,36 @@
+services:
+  api:
+    build: .  # 기존 Dockerfile을 그대로 재사용
+    container_name: review-api
+    ports:
+      - "8005:8005"
+    env_file:
+      - .env
+    environment:
+      # 컨테이너 안에서 DB 주소는 localhost가 아니라 서비스이름 db다.
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    # Dockerfile의 기본 CMD 대신 DB 저장 버전을 실행한다.
+    command: uvicorn app.main_db:app --host 0.0.0.0 --port 8005
+    depends_on:
+      db:
+        condition: service_healthy # DB가 준비된 뒤에 api를 시작
+
+  db:
+    image: postgres:17
+    container_name: review-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"   # PC의 pgAdmin4는 5433으로 접속
+    volumes:
+      - review_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_DB} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  review_pgdata:
