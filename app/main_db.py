@@ -18,7 +18,8 @@ from sqlalchemy.exc import SQLAlchemyError  # noqa: E402
 from sqlalchemy.orm import Session  # noqa: E402
 
 from app.database import Base, engine, get_db  # noqa: E402
-from app.gemini_client import ReviewAnalyzer  # noqa: E402
+# from app.gemini_client import ReviewAnalyzer  # noqa: E402
+from app.openai_client import ReviewAnalyzer # noqa: E402
 from app.models import Review  # noqa: E402
 from app.schemas import ReviewRequest, ReviewResponse  # noqa: E402
 from app.schemas_db import ReviewRecord, StatsResponse  # noqa: E402
@@ -40,7 +41,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title='고객 리뷰 분석 API (PostgreSQL 저장 버전)',
-    description='Gemini로 분석한 리뷰를 PostgreSQL에 저장하고 조회한다.',
+    description='OpenAI API로 분석한 리뷰를 PostgreSQL에 저장하고 조회한다.',
     version='2.0.0',
     lifespan=lifespan,
 )
