@@ -1,1 +1,2 @@
 merong.txt
+openai api key
